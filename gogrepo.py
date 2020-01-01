@@ -187,6 +187,8 @@ ORPHAN_DIR_EXCLUDE_LIST = [ORPHAN_DIR_NAME, DOWNLOADING_DIR_NAME, '!misc']
 ORPHAN_FILE_EXCLUDE_LIST = [INFO_FILENAME, SERIAL_FILENAME]
 RESUME_SAVE_THRESHOLD = 50
 
+LONGTITLE_DIR = False
+
 #temporary request wrapper while testing sessions module in context of update. Will replace request when complete
 def update_request(session, url, args=None, byte_range=None, retries=HTTP_RETRY_COUNT, delay=None, stream=False):
     """Performs web request to url with optional retries, delay, and byte range.
@@ -1417,7 +1419,11 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
     # Find all items to be downloaded and push into work queue
     for item in sorted(items, key=lambda g: g.title):
         info("{%s}" % item.title)
-        item_homedir = os.path.join(savedir, item.title)
+        if LONGTITLE_DIR:
+            game_name = item.long_title
+        else:
+            game_name = item.title
+        item_homedir = os.path.join(savedir, game_name)
         item_downloaddir = os.path.join(savedir, DOWNLOADING_DIR_NAME, item.title)
         if not dryrun:
             if not os.path.isdir(item_homedir):
