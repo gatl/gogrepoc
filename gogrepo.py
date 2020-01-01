@@ -93,7 +93,7 @@ logFormatter = logging.Formatter("%(asctime)s | %(message)s", datefmt='%H:%M:%S'
 rootLogger = logging.getLogger('ws')
 rootLogger.setLevel(logging.DEBUG)
 consoleHandler = logging.StreamHandler(sys.stdout)
-loggingHandler = logging.handlers.RotatingFileHandler('gogrepo.log', mode='a+', maxBytes = 10485760*3 , backupCount = 10,  encoding=None, delay=True)
+loggingHandler = logging.handlers.RotatingFileHandler('gogrepo.log', mode='a+', maxBytes = 10485760*3 , backupCount = 10, encoding=None, delay=True)
 loggingHandler.setFormatter(logFormatter)
 consoleHandler.setFormatter(logFormatter)
 rootLogger.addHandler(consoleHandler)
@@ -128,7 +128,7 @@ GOG_ACCOUNT_URL = r'https://www.gog.com/account'
 GOG_LOGIN_URL = r'https://login.gog.com/login_check'
 
 # GOG Constants
-GOG_MEDIA_TYPE_GAME  = '1'
+GOG_MEDIA_TYPE_GAME = '1'
 GOG_MEDIA_TYPE_MOVIE = '2'
 
 # HTTP request settings
@@ -496,9 +496,9 @@ def handle_game_renames(savedir, gamesdb, dryrun):
                 item.old_name = None
 
             if (item.old_name is not None):
-                game_dir =  os.path.join(savedir, game.title)
-                src_file =  os.path.join(game_dir, item.old_name)
-                dst_file =  os.path.join(game_dir, item.name)
+                game_dir = os.path.join(savedir, game.title)
+                src_file = os.path.join(game_dir, item.old_name)
+                dst_file = os.path.join(game_dir, item.name)
                 if os.path.isfile(src_file):
                     try:
                         if os.path.exists(dst_file):
@@ -573,7 +573,7 @@ def fetch_chunk_tree(response, session):
             chunk_url = response.url.replace('?', '.xml?')
             chunk_response = update_request(session, chunk_url)
             shelf_etree = xml.etree.ElementTree.fromstring(chunk_response.content)
-            return  shelf_etree
+            return shelf_etree
         except requests.HTTPError as e:
             if e.response.status_code == 404:
                 warn("no md5 data found for {}".format(chunk_url))
@@ -1026,7 +1026,7 @@ def cmd_update(os_list, lang_list, skipknown, updateonly, ids, skipids, skipHidd
     known_titles = []
     i = 0
 
-    api_url  = GOG_ACCOUNT_URL
+    api_url = GOG_ACCOUNT_URL
     api_url += "/getFilteredProducts"
 
 
@@ -1103,7 +1103,7 @@ def cmd_update(os_list, lang_list, skipknown, updateonly, ids, skipids, skipHidd
                 if not done:
                     if item.title not in skipids and str(item.id) not in skipids:
                         if ids:
-                            if (item.title  in ids or str(item.id) in ids):  # support by game title or gog id
+                            if (item.title in ids or str(item.id) in ids):  # support by game title or gog id
                                 info('scanning found "{}" in product data!'.format(item.title))
                                 try:
                                     ids.remove(item.title)
@@ -1149,7 +1149,7 @@ def cmd_update(os_list, lang_list, skipknown, updateonly, ids, skipids, skipHidd
             invalidIDs = [int(id) for id in ids if is_numeric_id(id) and int(id) in known_ids]
             invalids = invalidIDs + invalidTitles
             if invalids:
-                formattedInvalids =  ', '.join(map(str, invalids))
+                formattedInvalids = ', '.join(map(str, invalids))
                 warn(' game id(s) from {%s} were in your manifest but not your product data ' % formattedInvalids)
                 titlesToIDs = [(game.id, game.title) for game in gamesdb if game.title in invalidTitles]
                 for invalidID in invalidIDs:
@@ -1174,7 +1174,7 @@ def cmd_update(os_list, lang_list, skipknown, updateonly, ids, skipids, skipHidd
             else:
                 warn('nothing to do')
             if idsOriginal:
-                formattedIds =  ', '.join(map(str, idsOriginal))
+                formattedIds = ', '.join(map(str, idsOriginal))
                 warn('with game id(s) from {%s}' % formattedIds)
             return
 
@@ -1184,7 +1184,7 @@ def cmd_update(os_list, lang_list, skipknown, updateonly, ids, skipids, skipHidd
         if not idsOriginal and not updateonly and not skipknown:
             info('found %d games !!%s' % (items_count, '!'*int(items_count/100)))  # teehee
             if skipids:
-                formattedSkipIds =  ', '.join(map(str, skipids))
+                formattedSkipIds = ', '.join(map(str, skipids))
                 info('not including game id(s) from {%s}' % formattedSkipIds)
 
 
@@ -1389,14 +1389,14 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
         return '%.2fGB' % (b / float(1024**3))
 
     if ids:
-        formattedIds =  ', '.join(map(str, ids))
+        formattedIds = ', '.join(map(str, ids))
         info("downloading games with id(s): {%s}" % formattedIds)
         downloadItems = [item for item in items if item.title in ids or str(item.id) in ids]
         items = downloadItems
 
 
     if skipids:
-        formattedSkipIds =  ', '.join(map(str, skipids))
+        formattedSkipIds = ', '.join(map(str, skipids))
         info("skipping games with id(s): {%s}" % formattedSkipIds)
         downloadItems = [item for item in items if item.title not in skipids and str(item.id) not in skipids]
         items = downloadItems
@@ -1446,14 +1446,14 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
             item.sharedDownloads = []
 
 
-        downloadsOS = [game_item for game_item in  item.downloads if game_item.os_type in os_list]
+        downloadsOS = [game_item for game_item in item.downloads if game_item.os_type in os_list]
         item.downloads = downloadsOS
         #print(item.downloads)
 
-        downloadsOS = [game_item for game_item in  item.galaxyDownloads if game_item.os_type in os_list]
+        downloadsOS = [game_item for game_item in item.galaxyDownloads if game_item.os_type in os_list]
         item.galaxyDownloads = downloadsOS
 
-        downloadsOS = [game_item for game_item in  item.sharedDownloads if game_item.os_type in os_list]
+        downloadsOS = [game_item for game_item in item.sharedDownloads if game_item.os_type in os_list]
         item.sharedDownloads = downloadsOS
 
 
@@ -1463,14 +1463,14 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
             valid_langs.append(LANG_TABLE[lang])
 
 
-        downloadslangs = [game_item for game_item in  item.downloads if game_item.lang in valid_langs]
+        downloadslangs = [game_item for game_item in item.downloads if game_item.lang in valid_langs]
         item.downloads = downloadslangs
         #print(item.downloads)
 
-        downloadslangs = [game_item for game_item in  item.galaxyDownloads if game_item.lang in valid_langs]
+        downloadslangs = [game_item for game_item in item.galaxyDownloads if game_item.lang in valid_langs]
         item.galaxyDownloads = downloadslangs
 
-        downloadslangs = [game_item for game_item in  item.sharedDownloads if game_item.lang in valid_langs]
+        downloadslangs = [game_item for game_item in item.sharedDownloads if game_item.lang in valid_langs]
         item.sharedDownloads = downloadslangs
 
 
@@ -1970,7 +1970,7 @@ def cmd_backup(src_dir, dest_dir, skipextras, os_list, lang_list, ids, skipids, 
                     shutil.copy(os.path.join(src_game_dir, extra_file), dest_game_dir)
 
 
-def cmd_verify(gamedir, skipextras, skipids,  check_md5, check_filesize, check_zips, delete_on_fail, clean_on_fail, ids, os_list, lang_list, skipgalaxy, skipstandalone, skipshared, force_verify):
+def cmd_verify(gamedir, skipextras, skipids, check_md5, check_filesize, check_zips, delete_on_fail, clean_on_fail, ids, os_list, lang_list, skipgalaxy, skipstandalone, skipshared, force_verify):
     """Verifies all game files match manifest with any available md5 & file size info
     """
     item_count = 0
@@ -1989,25 +1989,25 @@ def cmd_verify(gamedir, skipextras, skipids,  check_md5, check_filesize, check_z
     games_to_check_base = sorted(items, key=lambda g: g.title)
 
     if skipids:
-        formattedSkipIds =  ', '.join(map(str, skipids))
+        formattedSkipIds = ', '.join(map(str, skipids))
         info('skipping files with ids in {%s}' % formattedSkipIds)
         games_to_check = [game for game in games_to_check_base if (game.title not in skipids and str(game.id) not in skipids)]
-        games_to_skip = [game for game in games_to_check_base if (game.title  in skipids or str(game.id) in skipids)]
+        games_to_skip = [game for game in games_to_check_base if (game.title in skipids or str(game.id) in skipids)]
         games_to_skip_titles = [game.title for game in games_to_skip]
         games_to_skip_ids = [str(game.id) for game in games_to_skip]
         not_skipped = [id for id in skipids if id not in games_to_skip_titles and id not in games_to_skip_ids]
         if not_skipped:
-            formattedNotSkipped =  ', '.join(map(str, not_skipped))
+            formattedNotSkipped = ', '.join(map(str, not_skipped))
             warn('The following id(s)/title(s) could not be found to skip {%s}' % formattedNotSkipped)
     elif ids:
         games_to_check = [game for game in games_to_check_base if (game.title in ids or str(game.id) in ids)]
         if not games_to_check:
-            formattedIds =  ', '.join(map(str, ids))
+            formattedIds = ', '.join(map(str, ids))
             warn('no known files with ids in {%s} where found' % formattedIds)
             return
     else:
         info('verifying all known files in the manifest')
-        games_to_check =  games_to_check_base
+        games_to_check = games_to_check_base
 
     handle_game_renames(gamedir, items, False)
 
