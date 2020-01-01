@@ -1338,7 +1338,11 @@ def cmd_import(src_dir, dest_dir, os_list, lang_list, skipextras, skipids, ids, 
             if game_item.md5 is not None:
                 if game_item.lang in valid_langs:
                     if game_item.os_type in os_list:
-                        md5_info[game_item.md5] = (game.title, game_item.name)
+                        if LONGTITLE_DIR:
+                            game_name = game.long_title
+                        else:
+                            game_name = game.title
+                        md5_info[game_item.md5] = (game_name, game_item.name)
         #Note that Extras currently have unusual Lang / OS entries that are also accepted.
         valid_langs_extras = valid_langs + [u'']
         valid_os_extras = os_list + [u'extra']
@@ -1346,7 +1350,11 @@ def cmd_import(src_dir, dest_dir, os_list, lang_list, skipextras, skipids, ids, 
             if game_item.md5 is not None:
                 if game_item.lang in valid_langs_extras:
                     if game_item.os_type in valid_os_extras:
-                        md5_info[extra_item.md5] = (game.title, extra_item.name)
+                        if LONGTITLE_DIR:
+                            game_name = game.long_title
+                        else:
+                            game_name = game.title
+                        md5_info[extra_item.md5] = (game_name, extra_item.name)
 
     info("searching for files within '%s'" % src_dir)
     file_list = []
