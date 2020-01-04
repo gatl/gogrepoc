@@ -187,8 +187,8 @@ ORPHAN_DIR_EXCLUDE_LIST = [ORPHAN_DIR_NAME, DOWNLOADING_DIR_NAME, '!misc']
 ORPHAN_FILE_EXCLUDE_LIST = [INFO_FILENAME, SERIAL_FILENAME]
 RESUME_SAVE_THRESHOLD = 50
 
-LONGTITLE_DIR = False
-STORE_HASH = False
+LONGTITLE_DIR = True
+STORE_HASH = True
 
 #temporary request wrapper while testing sessions module in context of update. Will replace request when complete
 def update_request(session, url, args=None, byte_range=None, retries=HTTP_RETRY_COUNT, delay=None, stream=False):
