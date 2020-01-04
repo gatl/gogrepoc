@@ -188,6 +188,7 @@ ORPHAN_FILE_EXCLUDE_LIST = [INFO_FILENAME, SERIAL_FILENAME]
 RESUME_SAVE_THRESHOLD = 50
 
 LONGTITLE_DIR = False
+STORE_HASH = False
 
 #temporary request wrapper while testing sessions module in context of update. Will replace request when complete
 def update_request(session, url, args=None, byte_range=None, retries=HTTP_RETRY_COUNT, delay=None, stream=False):
@@ -1373,6 +1374,9 @@ def cmd_import(src_dir, dest_dir, os_list, lang_list, skipextras, skipids, ids, 
             if not os.path.isdir(src_dir):
                 os.makedirs(src_dir)
             shutil.copy(f, dest_file)
+            if STORE_HASH:
+                with open(dest_file + '.md5', 'w') as hash_file:
+                    hash_file.write(h)
 
 
 def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, skipgalaxy, skipstandalone, skipshared):
@@ -1555,7 +1559,7 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
             info('     download   %s' % game_item.name)
             sizes[dest_file] = game_item.size
 
-            work_dict[dest_file] = (game_item.href, game_item.size, 0, game_item.size-1, dest_file, downloading_file)
+            work_dict[dest_file] = (game_item.href, game_item.size, 0, game_item.size-1, game_item.md5, dest_file, downloading_file)
 
     for work_item in work_dict:
         work.put(work_dict[work_item])
@@ -1605,7 +1609,7 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
     def worker():
         tid = threading.current_thread().ident
         while not work.empty():
-            (href, sz, start, end, path, downloading_path) = work.get()
+            (href, sz, start, end, file_hash, path, downloading_path) = work.get()
             try:
                 dest_dir = os.path.dirname(path)
                 downloading_dir = os.path.dirname(downloading_path)
@@ -1827,6 +1831,11 @@ def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, 
                     with lock:
                         info("moving completed download '%s' to '%s'  " % (downloading_path, path))
                         shutil.move(downloading_path, path)
+                        if STORE_HASH:
+                            if file_hash is None:
+                                file_hash = hashfile(path)
+                            with open(path + '.md5', 'w') as hash_file:
+                                hash_file.write(file_hash)
                 else:
                     with lock:
                         info("not moving uncompleted download '%s', success: %s remaining bytes: %d / %d " % (downloading_path, str(succeed), sizes[path], sz))
