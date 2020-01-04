@@ -1357,20 +1357,23 @@ def cmd_import(src_dir, dest_dir, os_list, lang_list, skipextras, skipids, ids, 
     for f in file_list:
         fname = os.path.basename(f)
         info("calculating md5 for '%s'" % fname)
-        h = hashfile(f)
-        if h in md5_info:
-            title, fname = md5_info[h]
-            src_dir = os.path.join(dest_dir, title)
-            dest_file = os.path.join(src_dir, fname)
-            info('found a match! [%s] -> %s' % (h, fname))
-            if os.path.isfile(dest_file):
-                if h == hashfile(dest_file):
-                    info('destination file already exists with the same md5 value.  skipping copy.')
-                    continue
-            info("copying to %s..." % dest_file)
-            if not os.path.isdir(src_dir):
-                os.makedirs(src_dir)
-            shutil.copy(f, dest_file)
+        try:
+            h = hashfile(f)
+            if h in md5_info:
+                title, fname = md5_info[h]
+                src_dir = os.path.join(dest_dir, title)
+                dest_file = os.path.join(src_dir, fname)
+                info('found a match! [%s] -> %s' % (h, fname))
+                if os.path.isfile(dest_file):
+                    if h == hashfile(dest_file):
+                        info('destination file already exists with the same md5 value.  skipping copy.')
+                        continue
+                info("copying to %s..." % dest_file)
+                if not os.path.isdir(src_dir):
+                    os.makedirs(src_dir)
+                shutil.copy(f, dest_file)
+        except (PermissionError, OSError):
+            warn("could not read file '%s'.  ignoring it." % f)
 
 
 def cmd_download(savedir, skipextras, skipids, dryrun, ids, os_list, lang_list, skipgalaxy, skipstandalone, skipshared):
