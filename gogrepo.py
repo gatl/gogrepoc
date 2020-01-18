@@ -2121,8 +2121,10 @@ def cmd_verify(gamedir, skipextras, skipids, check_md5, check_filesize, check_zi
             item_count += 1
 
             itm_dirpath = os.path.join(game.title, itm.name)
-            itm_file = os.path.join(gamedir, game.title, itm.name)
-
+            if LONGTITLE_DIR:
+                itm_file = os.path.join(gamedir, game.long_title, itm.name)
+            else:
+                itm_file = os.path.join(gamedir, game.title, itm.name)
 
 
             if os.path.isfile(itm_file):
